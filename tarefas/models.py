@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import Usuarios
+from django.conf import settings
 # Create your models here.
 
 class Tarefa(models.Model):
@@ -28,7 +29,7 @@ class Tarefa(models.Model):
     tipo = models.CharField(max_length=1, choices=TIPO)
     descricao = models.TextField()
     data = models.DateField()
-    usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.titulo} - {self.categoria} - {self.prioridade}"
