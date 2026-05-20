@@ -6,14 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Login aqui</h1>
+    <h1>Cadastro aqui</h1>
 
     <form method="POST">
         {% csrf_token %}
         <p>Preecha as informações abaixo:</p>
         {{ form.as_p }}
         
-        <button type="submit">Login</button>
+        <button type="submit">Cadastro</button>
     </form>
 
     <a href="/">inicio</a>
