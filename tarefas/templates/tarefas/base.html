@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>{% block title %}Agenda Fluida{% endblock %}</title>
+</head>
+<body>
+
+    <header style="background-color: #f0f0f0; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+    
+    <h2>Agenda Fluida</h2>
+
+    {% block search_bar %}
+    <form action="{% url 'home' %}" method="GET">
+        <input type="text" name="search" placeholder="Pesquisar tarefa...">
+        <button type="submit">Buscar</button>
+    </form>
+    {% endblock %}
+
+    <div>
+        <span>Olá, <strong>{{ user.username }}</strong></span>
+        <a href="{% url 'logout' %}" style="margin-left: 15px; color: red;">Sair</a>
+    </div>
+
+</header>
+
+    <hr> <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Usuarios # Importa a sua model de usuários customizada
 
-# Register your models here.
+# Registra a model de usuários no painel
+admin.site.register(Usuarios)

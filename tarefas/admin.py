@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Tarefa # Importa a sua model de tarefas
 
-# Register your models here.
+# Registra a model para ela aparecer no painel
+admin.site.register(Tarefa)

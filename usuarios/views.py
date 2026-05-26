@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, authenticate
 from .forms import CadastroForm, LoginForm
 from .models import Usuarios
+from django.contrib.auth import logout as auth_logout
 
 # Create your views here.
 
@@ -58,3 +59,9 @@ def login_view(request):
         'form': form
     }
     return render(request, 'usuarios/login.html', context)
+
+
+
+def logout_view(request):
+    auth_logout(request) # Apaga o cookie de sessão do navegador
+    return redirect('home') # Manda o usuário de volta para a rota inicial (que agora vai mostrar a landing)

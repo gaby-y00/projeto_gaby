@@ -1,30 +1,49 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda Fluida - Home</title>
-</head>
-<body>
-    <h1>Home aqui</h1>
-    <a href="{% url "cadastro" %}">Cadastro</a>
-    
-    <a href="{% url "login" %}">Login</a>
+{% extends 'tarefas/base.html' %} 
 
-    <a href="{% url "criar" %}">Nova Tarefa</a>
+{% block title %}Minhas Tarefas{% endblock %}
 
-    
-    <h2>Minhas Tarefas</h2>
-    <ul>
-        {% for tarefa in tarefas %}
-            <li>
-                <strong>{{ tarefa.titulo }}</strong> - {{ tarefa.categoria }} 
-                (Prioridade: {{ tarefa.prioridade }})
-            </li>
-        {% empty %}
-            <li>Nenhuma tarefa cadastrada no momento.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% block content %}
+
+    <div class="container-filtros">
+        <span class="texto-filtrar">Filtrar por:</span>
+        
+        <a href="{% url 'home' %}">
+            <button class="btn-categoria btn-todas">Todas</button>
+        </a>
+        <a href="{% url 'categoria' 'Estudo' %}">
+            <button class="btn-categoria btn-estudo">Estudo</button>
+        </a>
+        <a href="{% url 'categoria' 'Pessoal' %}">
+            <button class="btn-categoria btn-pessoal">Pessoal</button>
+        </a>
+        <a href="{% url 'categoria' 'Financeiro' %}">
+            <button class="btn-categoria btn-financeiro">Financeiro</button>
+        </a>
+        <a href="{% url 'categoria' 'Compromisso' %}">
+            <button class="btn-categoria btn-compromissos">Compromissos</button>
+        </a>
+    </div>
+
+    <div class="cabecalho-tarefas">
+        <h2>Suas Tarefas {% if categoria_atual %}- {{ categoria_atual }}{% endif %}</h2>
+        <a href="{% url 'criar_tarefa' %}">
+            <button class="btn-criar-tarefa">+ Criar Nova Tarefa</button>
+        </a>
+    </div>
+
+    <ul class="lista-tarefas">
+    {% for tarefa in tarefas %}
+        <li class="item-tarefa">
+            <span class="titulo-tarefa">
+                <a href="{% url 'detalhar_tarefa' tarefa.id %}">
+                    <strong>{{ tarefa.titulo }}</strong>
+                </a>
+            </span>
+            <span class="badge-categoria">{{ tarefa.categoria }}</span>
+        </li>
+    {% empty %}
+        <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada nesta categoria.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'tarefas/base.html' %}
+
+{% block title %}{{ tarefa.titulo }}{% endblock %}
+
+{% block content %}
+    <div class="bloco-detalhe-tarefa">
+        <h1>{{ tarefa.titulo }}</h1>
+        <p class="categoria"><strong>Categoria:</strong> {{ tarefa.categoria }}</p>
+        
+        <hr>
+
+        <div class="conteudo-tarefa">
+            <h3>Descrição:</h3>
+            <p>{{ tarefa.descricao }}</p>
+            
+            <h3>Data:</h3>
+            <p>{{ tarefa.data }}</p> 
+        </div>
+
+        <hr>
+
+        <div class="acoes-tarefa">
+            <a href="{% url 'excluir_tarefa' tarefa.id %}">
+                <button class="btn-excluir" style="color: white; background-color: red; border: none; padding: 10px; cursor: pointer;">
+                    Excluir Tarefa
+                </button>
+            </a>
+            
+            <a href="{% url 'home' %}" style="margin-left: 15px;">Voltar para a Home</a>
+        </div>
+    </div>
+{% endblock %}
