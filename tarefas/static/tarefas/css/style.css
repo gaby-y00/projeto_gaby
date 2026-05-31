@@ -1,0 +1,285 @@
+/* Configurações Gerais de Fonte e Cores Modernas */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho (Header) Fluido */
+header {
+    background-color: #ffffff !important; /* Forçando fundo branco elegante */
+    padding: 15px 40px !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-bottom: 1px solid #e1e8ed;
+}
+
+header h2 {
+    color: #4f46e5; /* Roxo moderno */
+    margin: 0;
+    font-weight: 700;
+}
+
+/* Barra de Pesquisa */
+header form input[type="text"] {
+    padding: 8px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    outline: none;
+    width: 250px;
+    transition: all 0.3s;
+}
+
+header form input[type="text"]:focus {
+    border-color: #4f46e5;
+    width: 300px;
+}
+
+header form button {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+/* Container do Conteúdo Principal */
+main, .content, blockcontent {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Títulos */
+h1, h2 {
+    color: #1e293b;
+    margin-top: 0;
+}
+
+/* Listagem de Tarefas */
+.lista-tarefas {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.item-tarefa {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.item-tarefa:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Links dos Títulos das Tarefas */
+.titulo-tarefa a {
+    color: #334155;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.titulo-tarefa a:hover {
+    color: #4f46e5;
+}
+
+/* Badges de Categorias */
+.badge-categoria {
+    background-color: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Botões Gerais */
+button, .btn-principal {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #3730a3;
+}
+
+/* Botões Específicos de Ação */
+.btn-editar, button[style*="background-color: #007bff"] {
+    background-color: #0ea5e9 !important;
+}
+.btn-editar:hover { background-color: #0369a1 !important; }
+
+.btn-excluir, button[style*="background-color: red"] {
+    background-color: #ef4444 !important;
+}
+.btn-excluir:hover { background-color: #b91c1c !important; }
+
+/* Formulários */
+input[type="text"], input[type="date"], textarea {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px;
+    font-family: inherit;
+}
+input:focus, textarea:focus {
+    border-color: #4f46e5;
+    outline: none;
+}
+
+/* Bloco de Detalhes da Tarefa */
+.bloco-detalhe-tarefa hr {
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+    margin: 20px 0;                             
+}
+
+
+
+/* =========================================
+   ESTILOS DO CALENDÁRIO (HOME) - NOVO FORMATO
+   ========================================= */
+
+.calendario-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 40px;
+    max-width: 100%;
+}
+
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendario-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1e293b;
+}
+
+.calendario-header button {
+    background-color: #f1f5f9;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 1.2rem;
+    color: #475569;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.calendario-header button:hover {
+    background-color: #e2e8f0;
+}
+
+.calendario-dias-semana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    color: #64748b;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.calendario-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+/* O quadrado agora distribui o número no topo e as barras embaixo */
+.calendario-dia {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.calendario-dia:hover:not(.vazio) {
+    background-color: #e2e8f0;
+    transform: scale(1.02);
+}
+
+.calendario-dia.vazio {
+    background-color: transparent;
+    border: none;
+    cursor: default;
+}
+
+/* Estilo do número da data */
+.numero-dia {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+/* O dia de hoje ganha um círculo azul discreto em volta do número */
+.calendario-dia.hoje .numero-dia {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 4px auto;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Container que agrupa as linhazinhas de atividades */
+.calendario-tarefas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: auto; /* Empurra as linhas para a parte de baixo do quadrado */
+}
+
+/* Estilo de cada linhazinha horizontal */
+.barra-tarefa {
+    height: 5px;
+    border-radius: 3px;
+    width: 100%;
+}
+
+/* CORES DAS LINHAZINHAS POR PRIORIDADE */
+.barra-tarefa.prio-u { background-color: #ff4d4d; } /* U = Vermelho */
+.barra-tarefa.prio-m { background-color: #ffb347; } /* M = Laranja */
+.barra-tarefa.prio-f { background-color: #a366ff; } /* F = Roxo */

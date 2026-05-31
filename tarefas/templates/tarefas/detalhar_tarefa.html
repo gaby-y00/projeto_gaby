@@ -11,15 +11,38 @@
 
         <div class="conteudo-tarefa">
             <h3>Descrição:</h3>
-            <p>{{ tarefa.descricao }}</p>
+            <p>
+                {% if tarefa.descricao %}
+                    {{ tarefa.descricao }}
+                {% else %}
+                    <em style="color: gray;">Nenhuma descrição fornecida.</em>
+                {% endif %}
+            </p>
             
             <h3>Data:</h3>
             <p>{{ tarefa.data }}</p> 
+
+            <h3>Repetição / Frequência:</h3>
+            <p>
+                {% if tarefa.recorrencia == 'nao_repete' %} Não se repete (Tarefa única)
+                {% elif tarefa.recorrencia == 'diaria' %} Todos os dias
+                {% elif tarefa.recorrencia == 'semanal' %} Toda semana
+                {% elif tarefa.recorrencia == 'mensal' %} Todo mês
+                {% endif %}
+            </p>
         </div>
 
         <hr>
 
         <div class="acoes-tarefa">
+
+            <a href="{% url 'editar_tarefa' tarefa.id %}" style="text-decoration: none;">
+                <button class="btn-editar" style="color: white; background-color: #007bff; border: none; padding: 10px; cursor: pointer; margin-right: 10px;">
+                    Editar Tarefa
+                </button>
+            </a>
+
+            
             <a href="{% url 'excluir_tarefa' tarefa.id %}">
                 <button class="btn-excluir" style="color: white; background-color: red; border: none; padding: 10px; cursor: pointer;">
                     Excluir Tarefa

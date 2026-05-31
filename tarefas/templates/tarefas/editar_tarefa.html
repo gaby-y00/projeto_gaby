@@ -1,0 +1,75 @@
+{% extends 'tarefas/base.html' %}
+
+{% block title %}Editar Tarefa{% endblock %}
+
+{% block search_bar %}{% endblock %}
+
+{% block content %}
+    <h2>Editar Tarefa</h2>
+
+    <form method="POST" style="max-width: 500px; display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        
+        <div>
+            <label>Título:</label><br>
+            <input type="text" name="titulo" value="{{ tarefa.titulo }}" required style="width: 100%; padding: 8px;">
+        </div>
+
+        <div>
+            <label>Categoria:</label><br>
+            <select name="categoria" id="id_categoria">
+                <option value="Estudo" {% if tarefa.categoria == 'Estudo' %}selected{% endif %}>Estudo</option>
+                <option value="Pessoal" {% if tarefa.categoria == 'Pessoal' %}selected{% endif %}>Pessoal</option>
+                <option value="Financeiro" {% if tarefa.categoria == 'Financeiro' %}selected{% endif %}>Financeiro</option>
+                <option value="Compromisso" {% if tarefa.categoria == 'Compromisso' %}selected{% endif %}>Compromisso</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Descrição:</label><br>
+            <textarea name="descricao" rows="5" style="width: 100%; padding: 8px;">{{ tarefa.descricao }}</textarea>
+        </div>
+
+        <div>
+            <label>Repetição / Frequência:</label><br>
+            <select name="recorrencia" id="id_recorrencia">
+                <option value="nao_repete" {% if tarefa.recorrencia == 'nao_repete' %}selected{% endif %}>Não se repete (Única)</option>
+                <option value="diaria" {% if tarefa.recorrencia == 'diaria' %}selected{% endif %}>Todos os dias</option>
+                <option value="semanal" {% if tarefa.recorrencia == 'semanal' %}selected{% endif %}>Toda semana</option>
+                <option value="mensal" {% if tarefa.recorrencia == 'mensal' %}selected{% endif %}>Todo mês</option>
+            </select>
+        </div>
+
+        <div id="bloco_data">
+            <label>Data Atual: {{ tarefa.data }}</label><br>
+            <input type="date" name="data" style="width: 100%; padding: 8px;">
+            <small style="color: gray;">(Deixe em branco se não quiser alterar a data)</small>
+        </div>
+
+        <div>
+            <button type="submit" style="background-color: green; color: white; padding: 10px 15px; border: none; cursor: pointer;">
+                Salvar Alterações
+            </button>
+            <a href="{% url 'home' %}" style="margin-left: 15px;">Cancelar</a>
+        </div>
+    </form>
+
+    <script>
+        const selectRecorrencia = document.getElementById('id_recorrencia');
+        const blocoData = document.getElementById('bloco_data');
+
+        function gerenciarCalendario() {
+            if (selectRecorrencia.value === 'diaria') {
+                blocoData.style.display = 'none';
+            } else {
+                blocoData.style.display = 'block';
+            }
+        }
+
+        // Executa assim que a página abre (caso a tarefa editada já seja diária)
+        gerenciarCalendario();
+
+        // Executa sempre que o usuário altera a seleção
+        selectRecorrencia.addEventListener('change', gerenciarCalendario);
+    </script>
+{% endblock %}

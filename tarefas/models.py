@@ -18,17 +18,19 @@ class Tarefa(models.Model):
         ('F','Flexível'),
     ]
 
-    TIPO = [
-        ('F','Fixa'),
-        ('T','Temporária'),
+    RECORRENCIA_CHOICES = [
+        ('nao_repete', 'Não se repete (Única)'),
+        ('diaria', 'Todos os dias'),
+        ('semanal', 'Toda semana'),
+        ('mensal', 'Todo mês'),
     ]
-
+            
     titulo = models.CharField(max_length=100)
     categoria = models.CharField(max_length=20, choices=CATEGORIA)
     prioridade = models.CharField(max_length=1, choices=PRIORIDADE)
-    tipo = models.CharField(max_length=1, choices=TIPO)
-    descricao = models.TextField()
-    data = models.DateField()
+    recorrencia = models.CharField(max_length=20, choices=RECORRENCIA_CHOICES, default='nao_repete')
+    descricao = models.TextField(blank=True, null=True)
+    data = models.DateField(null=True, blank=True)
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     def __str__(self):

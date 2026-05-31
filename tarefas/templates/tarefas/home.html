@@ -25,11 +25,32 @@
     </div>
 
     <div class="cabecalho-tarefas">
-        <h2>Suas Tarefas {% if categoria_atual %}- {{ categoria_atual }}{% endif %}</h2>
+        <h2>
+            Suas Tarefas 
+            {% if categoria_atual %}- {{ categoria_atual }}{% endif %}
+            {% if data_filtrada %} - {{ data_filtrada }}{% endif %}
+        </h2>
         <a href="{% url 'criar_tarefa' %}">
             <button class="btn-criar-tarefa">+ Criar Nova Tarefa</button>
         </a>
     </div>
+
+    {% if not categoria_atual and not data_filtrada %}
+        <div class="calendario-container">
+            <div class="calendario-header">
+                <button id="btn-prev-mes">&lt;</button>
+                <h2 id="mes-ano-display">Mês Ano</h2>
+                <button id="btn-next-mes">&gt;</button>
+            </div>
+            
+            <div class="calendario-dias-semana">
+                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+            </div>
+            
+            <div class="calendario-grid" id="calendario-grid">
+                </div>
+        </div>
+    {% endif %}
 
     <ul class="lista-tarefas">
     {% for tarefa in tarefas %}
@@ -42,8 +63,105 @@
             <span class="badge-categoria">{{ tarefa.categoria }}</span>
         </li>
     {% empty %}
-        <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada nesta categoria.</li>
+        <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada para este filtro.</li>
     {% endfor %}
-</ul>
+    </ul>
+
+    {% if not categoria_atual and not data_filtrada %}
+        <script>
+            const grid = document.getElementById('calendario-grid');
+            const mesAnoDisplay = document.getElementById('mes-ano-display');
+
+            const tarefasDoBanco = JSON.parse('{{ tarefas_json|escapejs }}' || '[]');
+            
+            let dataAtual = new Date(); // Pega a data de hoje
+
+            function renderizarCalendario() {
+                grid.innerHTML = '';
+                const mes = dataAtual.getMonth();
+                const ano = dataAtual.getFullYear();
+                
+                // Nomes dos meses em português
+                const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+                mesAnoDisplay.innerText = `${nomesMeses[mes]} ${ano}`;
+
+                // Descobre qual dia da semana o mês começa e quantos dias ele tem
+                const primeiroDia = new Date(ano, mes, 1).getDay();
+                const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+
+                // Adiciona espaços vazios para alinhar o primeiro dia
+                for (let i = 0; i < primeiroDia; i++) {
+                    const espaco = document.createElement('div');
+                    espaco.classList.add('calendario-dia', 'vazio');
+                    grid.appendChild(espaco);
+                }
+
+                // Adiciona os dias do mês
+                const hoje = new Date();
+                for (let dia = 1; dia <= diasNoMes; dia++) {
+                    const divDia = document.createElement('div');
+                    divDia.classList.add('calendario-dia');
+                    
+                    const spanNumero = document.createElement('span');
+                    spanNumero.classList.add('numero-dia');
+                    spanNumero.innerText = dia;
+                    divDia.appendChild(spanNumero);
+
+                    // Destaca o dia de hoje
+                    if (dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()) {
+                        divDia.classList.add('hoje');
+                    }
+
+                    // Monta a string da data atual do loop no formato 'YYYY-MM-DD'
+                    const stringMes = String(mes + 1).padStart(2, '0');
+                    const stringDia = String(dia).padStart(2, '0');
+                    const dataFormatada = `${ano}-${stringMes}-${stringDia}`;
+
+                    // Evento de clique para filtrar por data
+                    divDia.addEventListener('click', () => {
+                        window.location.href = `?data=${dataFormatada}`;
+                    });
+                    
+                    // Filtra se existem tarefas vindas do banco para este dia específico
+                    const tarefasDoDia = tarefasDoBanco.filter(t => t.data === dataFormatada);
+
+                    if (tarefasDoDia.length > 0) {
+                        const containerBarras = document.createElement('div');
+                        containerBarras.classList.add('calendario-tarefas-container');
+
+                        tarefasDoDia.forEach(t => {
+                            const barra = document.createElement('div');
+                            barra.classList.add('barra-tarefa');
+                            
+                            if (t.prioridade === 'U') barra.classList.add('prio-u');
+                            else if (t.prioridade === 'M') barra.classList.add('prio-m');
+                            else if (t.prioridade === 'F') barra.classList.add('prio-f');
+
+                            barra.title = t.titulo;
+                            containerBarras.appendChild(barra);
+                        });
+
+                        divDia.appendChild(containerBarras);
+                    }
+
+                    grid.appendChild(divDia);
+                }
+            }
+
+            // Botões de passar o mês
+            document.getElementById('btn-prev-mes').addEventListener('click', () => {
+                dataAtual.setMonth(dataAtual.getMonth() - 1);
+                renderizarCalendario();
+            });
+
+            document.getElementById('btn-next-mes').addEventListener('click', () => {
+                dataAtual.setMonth(dataAtual.getMonth() + 1);
+                renderizarCalendario();
+            });
+
+            // Desenha o calendário na tela pela primeira vez
+            renderizarCalendario();
+        </script>   
+    {% endif %}
 
 {% endblock %}
