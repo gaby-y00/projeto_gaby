@@ -25,10 +25,25 @@
         </div>
     </header>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <div class="layout-app">
+        
+        <aside class="sidebar">
+            <h3 class="sidebar-titulo">Meus Filtros</h3>
+            <nav class="menu-lateral">
+                <a href="{% url 'home' %}" class="menu-item">📅 Todas (Calendário)</a>
+                <a href="{% url 'categoria' 'Estudo' %}" class="menu-item">📚 Estudo</a>
+                <a href="{% url 'categoria' 'Pessoal' %}" class="menu-item">👤 Pessoal</a>
+                <a href="{% url 'categoria' 'Financeiro' %}" class="menu-item">💰 Financeiro</a>
+                <a href="{% url 'categoria' 'Compromisso' %}" class="menu-item">🤝 Compromissos</a>
+            </nav>
+        </aside>
+
+        <main class="conteudo-principal">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+    </div>
 
 </body>
 </html>

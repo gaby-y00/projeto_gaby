@@ -4,26 +4,6 @@
 
 {% block content %}
 
-    <div class="container-filtros">
-        <span class="texto-filtrar">Filtrar por:</span>
-        
-        <a href="{% url 'home' %}">
-            <button class="btn-categoria btn-todas">Todas</button>
-        </a>
-        <a href="{% url 'categoria' 'Estudo' %}">
-            <button class="btn-categoria btn-estudo">Estudo</button>
-        </a>
-        <a href="{% url 'categoria' 'Pessoal' %}">
-            <button class="btn-categoria btn-pessoal">Pessoal</button>
-        </a>
-        <a href="{% url 'categoria' 'Financeiro' %}">
-            <button class="btn-categoria btn-financeiro">Financeiro</button>
-        </a>
-        <a href="{% url 'categoria' 'Compromisso' %}">
-            <button class="btn-categoria btn-compromissos">Compromissos</button>
-        </a>
-    </div>
-
     <div class="cabecalho-tarefas">
         <h2>
             Suas Tarefas 
@@ -35,68 +15,70 @@
         </a>
     </div>
 
-    {% if not categoria_atual and not data_filtrada %}
-        <div class="calendario-container">
-            <div class="calendario-header">
-                <button id="btn-prev-mes">&lt;</button>
-                <h2 id="mes-ano-display">Mês Ano</h2>
-                <button id="btn-next-mes">&gt;</button>
-            </div>
-            
-            <div class="calendario-dias-semana">
-                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
-            </div>
-            
-            <div class="calendario-grid" id="calendario-grid">
+    <div class="dashboard-grid">
+        
+        {% if not categoria_atual and not data_filtrada %}
+            <div class="coluna-calendario">
+                <div class="calendario-container">
+                    <div class="calendario-header">
+                        <button id="btn-prev-mes">&lt;</button>
+                        <h2 id="mes-ano-display">Mês Ano</h2>
+                        <button id="btn-next-mes">&gt;</button>
+                    </div>
+                    
+                    <div class="calendario-dias-semana">
+                        <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+                    </div>
+                    
+                    <div class="calendario-grid" id="calendario-grid"></div>
                 </div>
-        </div>
-    {% endif %}
+            </div>
+        {% endif %}
 
-    <ul class="lista-tarefas">
-    {% for tarefa in tarefas %}
-        <li class="item-tarefa">
-            <span class="titulo-tarefa">
-                <a href="{% url 'detalhar_tarefa' tarefa.id %}">
-                    <strong>{{ tarefa.titulo }}</strong>
-                </a>
-            </span>
-            <span class="badge-categoria">{{ tarefa.categoria }}</span>
-        </li>
-    {% empty %}
-        <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada para este filtro.</li>
-    {% endfor %}
-    </ul>
+        <div class="coluna-tarefas">
+            <ul class="lista-tarefas" style="margin-top: 0;">
+            {% for tarefa in tarefas %}
+                <li class="item-tarefa">
+                    <span class="titulo-tarefa">
+                        <a href="{% url 'detalhar_tarefa' tarefa.id %}">
+                            <strong>{{ tarefa.titulo }}</strong>
+                        </a>
+                    </span>
+                    <span class="badge-categoria">{{ tarefa.categoria }}</span>
+                </li>
+            {% empty %}
+                <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada neste filtro.</li>
+            {% endfor %}
+            </ul>
+        </div>
+
+    </div>
 
     {% if not categoria_atual and not data_filtrada %}
         <script>
+            // TODO O SEU SCRIPT JAVASCRIPT DO CALENDÁRIO CONTINUA AQUI EXATAMENTE IGUAL
             const grid = document.getElementById('calendario-grid');
             const mesAnoDisplay = document.getElementById('mes-ano-display');
-
             const tarefasDoBanco = JSON.parse('{{ tarefas_json|escapejs }}' || '[]');
-            
-            let dataAtual = new Date(); // Pega a data de hoje
+            let dataAtual = new Date(); 
 
             function renderizarCalendario() {
                 grid.innerHTML = '';
                 const mes = dataAtual.getMonth();
                 const ano = dataAtual.getFullYear();
                 
-                // Nomes dos meses em português
                 const nomesMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
                 mesAnoDisplay.innerText = `${nomesMeses[mes]} ${ano}`;
 
-                // Descobre qual dia da semana o mês começa e quantos dias ele tem
                 const primeiroDia = new Date(ano, mes, 1).getDay();
                 const diasNoMes = new Date(ano, mes + 1, 0).getDate();
 
-                // Adiciona espaços vazios para alinhar o primeiro dia
                 for (let i = 0; i < primeiroDia; i++) {
                     const espaco = document.createElement('div');
                     espaco.classList.add('calendario-dia', 'vazio');
                     grid.appendChild(espaco);
                 }
 
-                // Adiciona os dias do mês
                 const hoje = new Date();
                 for (let dia = 1; dia <= diasNoMes; dia++) {
                     const divDia = document.createElement('div');
@@ -107,22 +89,18 @@
                     spanNumero.innerText = dia;
                     divDia.appendChild(spanNumero);
 
-                    // Destaca o dia de hoje
                     if (dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()) {
                         divDia.classList.add('hoje');
                     }
 
-                    // Monta a string da data atual do loop no formato 'YYYY-MM-DD'
                     const stringMes = String(mes + 1).padStart(2, '0');
                     const stringDia = String(dia).padStart(2, '0');
                     const dataFormatada = `${ano}-${stringMes}-${stringDia}`;
 
-                    // Evento de clique para filtrar por data
                     divDia.addEventListener('click', () => {
                         window.location.href = `?data=${dataFormatada}`;
                     });
                     
-                    // Filtra se existem tarefas vindas do banco para este dia específico
                     const tarefasDoDia = tarefasDoBanco.filter(t => t.data === dataFormatada);
 
                     if (tarefasDoDia.length > 0) {
@@ -140,15 +118,12 @@
                             barra.title = t.titulo;
                             containerBarras.appendChild(barra);
                         });
-
                         divDia.appendChild(containerBarras);
                     }
-
                     grid.appendChild(divDia);
                 }
             }
 
-            // Botões de passar o mês
             document.getElementById('btn-prev-mes').addEventListener('click', () => {
                 dataAtual.setMonth(dataAtual.getMonth() - 1);
                 renderizarCalendario();
@@ -159,7 +134,6 @@
                 renderizarCalendario();
             });
 
-            // Desenha o calendário na tela pela primeira vez
             renderizarCalendario();
         </script>   
     {% endif %}
