@@ -52,63 +52,64 @@ python manage.py migrate
 
 ```
 # Dados Iniciais para Testes (Carga Automatizada)
-    O sistema depende de relacionamentos entre Usuários e Perfis. Para facilitar a avaliação, preparei um script que insere usuários com planos diferentes e tarefas prontas (incluindo testes de tarefas atrasadas).
+O sistema depende de relacionamentos entre Usuários e Perfis. Para facilitar a avaliação, preparei um script que insere usuários com planos diferentes e tarefas prontas (incluindo testes de tarefas atrasadas).
 
 ```bash
 # Abra o Shell interativo do Django:
-    python manage.py shell
+python manage.py shell
 
 # Copie todo o bloco de código abaixo, cole dentro do terminal Shell:
-    from usuarios.models import Usuarios
-    from tarefas.models import Perfil, Tarefa, Categoria
-    from datetime import date, timedelta
+from usuarios.models import Usuarios
+from tarefas.models import Perfil, Tarefa, Categoria
+from datetime import date, timedelta
 
-    # 1. Criando Usuário Free de Teste
-    user_free, _ = Usuarios.objects.get_or_create(username="teste_free", email="free@teste.com")
-    user_free.set_password("senha123")
-    user_free.save()
-    perfil_free, _ = Perfil.objects.get_or_create(usuario=user_free)
-    perfil_free.plano = "free"
-    perfil_free.save()
+# 1. Criando Usuário Free de Teste
+user_free, _ = Usuarios.objects.get_or_create(username="teste_free", email="free@teste.com")
+user_free.set_password("senha123")
+user_free.save()
+perfil_free, _ = Perfil.objects.get_or_create(usuario=user_free)
+perfil_free.plano = "free"
+perfil_free.save()
 
-    Tarefa.objects.get_or_create(
-        titulo="Estudar para a Prova", categoria="Estudo",
-        prioridade="U", data=date.today(), usuario=user_free
-    )
-    # Tarefa Atrasada para teste da tag (Pendente)
-    Tarefa.objects.get_or_create(
-        titulo="Pagar conta de Internet", categoria="Financeiro",
-        prioridade="U", data=date.today() - timedelta(days=1), usuario=user_free
-    )
+Tarefa.objects.get_or_create(
+    titulo="Estudar para a Prova", categoria="Estudo",
+    prioridade="U", data=date.today(), usuario=user_free
+)
+# Tarefa Atrasada para teste da tag (Pendente)
+Tarefa.objects.get_or_create(
+    titulo="Pagar conta de Internet", categoria="Financeiro",
+    prioridade="U", data=date.today() - timedelta(days=1), usuario=user_free
+)
 
-    # 2. Criando Usuário Premium de Teste
-    user_premium, _ = Usuarios.objects.get_or_create(username="teste_premium", email="premium@teste.com")
-    user_premium.set_password("senha123")
-    user_premium.save()
-    perfil_premium, _ = Perfil.objects.get_or_create(usuario=user_premium)
-    perfil_premium.plano = "premium"
-    perfil_premium.save()
+# 2. Criando Usuário Premium de Teste
+user_premium, _ = Usuarios.objects.get_or_create(username="teste_premium", email="premium@teste.com")
+user_premium.set_password("senha123")
+user_premium.save()
+perfil_premium, _ = Perfil.objects.get_or_create(usuario=user_premium)
+perfil_premium.plano = "premium"
+perfil_premium.save()
 
-    Categoria.objects.get_or_create(nome="Trabalho", usuario=user_premium)
+Categoria.objects.get_or_create(nome="Trabalho", usuario=user_premium)
 
-    Tarefa.objects.get_or_create(
-        titulo="Reunião Semanal", categoria="Trabalho",
-        prioridade="M", data=date.today(), recorrencia="semanal", usuario=user_premium
-    )
+Tarefa.objects.get_or_create(
+    titulo="Reunião Semanal", categoria="Trabalho",
+    prioridade="M", data=date.today(), recorrencia="semanal", usuario=user_premium
+)
 
-    # 3. Criando Administrador
-    if not Usuarios.objects.filter(username="admin").exists():
-        admin_user = Usuarios.objects.create_superuser(username="admin", email="admin@teste.com", password="admin123")
-        Perfil.objects.get_or_create(usuario=admin_user, plano="premium")
+# 3. Criando Administrador
+if not Usuarios.objects.filter(username="admin").exists():
+    admin_user = Usuarios.objects.create_superuser(username="admin", email="admin@teste.com", password="admin123")
+    Perfil.objects.get_or_create(usuario=admin_user, plano="premium")
 
-    print("\n=== AMBIENTE POPULADO COM SUCESSO! ===")
+print("\n=== AMBIENTE POPULADO COM SUCESSO! ===")
 
 # Digite exit() para sair do Shell e inicie o servidor (python manage.py runserver).
+exit()
+python manage.py runserver
 ```
 
-
 # Tour Guiado e Roteiro de Testes
-    siga este roteiro de testes usando as contas geradas pelo script:
+siga este roteiro de testes usando as contas geradas pelo script:
 
 # 1. A Experiência e Limitações do Plano Free
 * Acesso: Faça login com `teste_free` | Senha: `senha123`
