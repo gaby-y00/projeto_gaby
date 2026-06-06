@@ -1,54 +1,54 @@
-# AGENDA FLUIDA #
+# 🎯 AGENDA FLUIDA
 
-# Objetivo e Problema que Busca Resolver:
-    O objetivo deste sistema é ser um gerenciador de tarefas inteligente e adaptável. O problema principal que ele resolve é a desorganização pessoal e a poluição visual dos aplicativos de produtividade tradicionais. Ao combinar uma lista de afazeres com uma visualização de calendário dinâmico, o sistema permite que o usuário foque nas pendências do dia, não se perca em tarefas vencidas e consiga categorizar suas demandas de forma eficiente.
+## Objetivo e Problema que Busca Resolver
+O objetivo deste sistema é ser um gerenciador de tarefas inteligente e adaptável. O problema principal que ele resolve é a desorganização pessoal e a poluição visual dos aplicativos de produtividade tradicionais. Ao combinar uma lista de afazeres com uma visualização de calendário dinâmico, o sistema permite que o usuário foque nas pendências do dia, não se perca em tarefas vencidas e consiga categorizar suas demandas de forma eficiente.
 
-# Tipos de Usuários Suportados e Permissões:
-    O sistema trabalha com autenticação e possui uma arquitetura baseada em planos de assinatura (SaaS). Atualmente, suporta dois tipos de usuários finais, além do administrador do sistema:
+---
 
-    1. Usuário Padrão (Plano Free)
-    (É o usuário recém-cadastrado na plataforma):
+## 👥 Tipos de Usuários Suportados e Permissões
+O sistema trabalha com autenticação e possui uma arquitetura baseada em planos de assinatura (SaaS). Atualmente, suporta dois tipos de usuários finais, além do administrador do sistema:
 
-    O que pode fazer: Criar até 10 tarefas, editar, concluir, excluir e visualizar detalhes. Pode navegar pelo calendário interativo e organizar suas tarefas usando as 4 categorias fixas do sistema (Estudo, Pessoal, Financeiro e Compromissos).
+### 1. Usuário Padrão (Plano Free)
+*(É o usuário recém-cadastrado na plataforma)*
+* **O que pode fazer:** Criar até 10 tarefas, editar, concluir, excluir e visualizar detalhes. Pode navegar pelo calendário interativo e organizar suas tarefas usando as 4 categorias fixas do sistema (Estudo, Pessoal, Financeiro e Compromissos).
 
-    2. Usuário Premium (Plano Pro)
-    (É o usuário que realizou o upgrade da conta):
+### 2. Usuário Premium (Plano Pro)
+*(É o usuário que realizou o upgrade da conta)*
+* **O que pode fazer:** Tem acesso ilimitado à criação de tarefas. Pode criar categorias (tags) 100% personalizadas para organizar suas tarefas. Pode excluir essas categorias, pode deixar as tarefas com a frequência que desejar (todos os dias, toda semana ou todo mês) e possui um painel lateral dinâmico. Caso cancele a assinatura, o sistema protege seus dados, ocultando as categorias premium sem excluí-las.
 
-    O que pode fazer: Tem acesso ilimitado à criação de tarefas. Pode criar categorias (tags) 100% personalizadas para organizar suas tarefas. Pode excluir essas categorias, pode  deixar as tarefas com a frequência que desejar (todos os dias, toda semana ou todo mês) e possui um painel lateral dinâmico.  Caso cancele a assinatura, o sistema protege seus dados, ocultando as categorias premium sem excluí-las.
+### 3. Administrador (Superuser)
+* **O que pode fazer:** Acessar o painel `/admin` do Django, gerenciar os cadastros e alterar manualmente o nível de permissão (Free/Premium) dos perfis dos usuários, além de ter controle total sobre as categorias e tarefas cadastradas no banco de dados.
 
-    3. Administrador (Superuser)
-    O que pode fazer: Acessar o painel "/admin" do Django, gerenciar os cadastros e alterar manualmente o nível de permissão (Free/Premium) dos perfis dos usuários, além de ter controle total sobre as categorias e tarefas cadastradas no banco de dados.
+---
 
-
-### 🚀 Como Instalar e Executar o Projeto (Ambiente de Testes) ###
+## 🚀 Como Instalar e Executar o Projeto (Ambiente de Testes)
 
 Siga rigorosamente os passos abaixo para clonar, configurar e rodar o projeto localmente.
 
-# 1. Clonar o Repositório
-
+**1. Clonar o Repositório**
 ```bash
-    git clone https://github.com/gaby-y00/projeto_gaby.git
+git clone https://github.com/gaby-y00/projeto_gaby.git
 
 # Em seguida, entre na pasta principal do projeto:
-    cd projeto_gaby
+cd projeto_gaby
 
 # 2. Criar e Ativar o Ambiente Virtual (venv):
-    # No Windows:
-    python -m venv venv
-    venv\Scripts\activate
+# No Windows:
+python -m venv venv
+venv\Scripts\activate
 
-   # ------------------- #
+# ------------------- #
 
-    # No Linux/macOS:
-    python3 -m venv venv
-    source venv/bin/activate
+# No Linux/macOS:
+python3 -m venv venv
+source venv/bin/activate
 
 # 3. Instalar as Dependências:
-    pip install django
+pip install django
 
 # 4. Executar as Migrações (Banco de Dados):
-    python manage.py makemigrations
-    python manage.py migrate
+python manage.py makemigrations
+python manage.py migrate
 
 ```
 # Dados Iniciais para Testes (Carga Automatizada)
