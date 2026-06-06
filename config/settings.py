@@ -119,4 +119,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Deixe vazio ou comente para o Django usar o localizador padrão de Apps
+STATICFILES_DIRS = []
+
 AUTH_USER_MODEL = 'usuarios.Usuarios'

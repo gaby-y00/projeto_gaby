@@ -1,0 +1,106 @@
+{% extends 'tarefas/base.html' %}
+
+{% block title %}Editar Tarefa - {{ tarefa.titulo }}{% endblock %}
+
+{% block content %}
+    <div class="bloco-formulario">
+        
+        <div class="form-header">
+            <h2>Editar Tarefa</h2>
+            <p class="subtitulo">Altere as informações abaixo para atualizar os dados da sua tarefa.</p>
+        </div>
+
+        <div class="form-body">
+            <form method="POST" class="form-tarefa">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_titulo">Título da Tarefa</label>
+                        <input type="text" id="id_titulo" name="titulo" value="{{ tarefa.titulo }}" required class="form-control" placeholder="Ex: Estudar lógica de programação">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_categoria">Categoria</label>
+                        <select name="categoria" id="id_categoria" class="form-control">
+                            {% for cat in categorias %}
+                                <option value="{{ cat }}" {% if cat == tarefa.categoria %}selected{% endif %}>
+                                    {{ cat }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_prioridade">Prioridade</label>
+                        <select name="prioridade" id="id_prioridade" class="form-control">
+                            <option value="U" {% if tarefa.prioridade == 'Urgente' or tarefa.prioridade == 'U' %}selected{% endif %}>Urgente</option>
+                            <option value="M" {% if tarefa.prioridade == 'Médio' or tarefa.prioridade == 'M' %}selected{% endif %}>Médio</option>
+                            <option value="F" {% if tarefa.prioridade == 'Fraco' or tarefa.prioridade == 'F' %}selected{% endif %}>Fraco</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_descricao">Descrição Detalhada</label>
+                        <textarea name="descricao" id="id_descricao" class="form-control" placeholder="Adicione detalhes, links ou observações importantes aqui...">{{ tarefa.descricao }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_recorrencia">
+                            Repetição / Frequência 
+                            {% if plano_usuario == 'free' %}<span style="font-size: 0.8rem; color: #f59e0b; margin-left: 5px;">👑 Premium</span>{% endif %}
+                        </label>
+                        
+                        <select name="recorrencia" id="id_recorrencia" class="form-control" {% if plano_usuario == 'free' %}disabled{% endif %}>
+                            <option value="nao_repete" {% if tarefa.recorrencia == 'nao_repete' or plano_usuario == 'free' %}selected{% endif %}>Não se repete (Única)</option>
+                            
+                            {% if plano_usuario == 'premium' %}
+                                <option value="diaria" {% if tarefa.recorrencia == 'diaria' %}selected{% endif %}>Todos os dias</option>
+                                <option value="semanal" {% if tarefa.recorrencia == 'semanal' %}selected{% endif %}>Toda semana</option>
+                                <option value="mensal" {% if tarefa.recorrencia == 'mensal' %}selected{% endif %}>Todo mês</option>
+                            {% endif %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="bloco_data">
+                        <label for="id_data">Data de Execução</label>
+                        <input type="date" id="id_data" name="data" value="{{ tarefa.data|date:'Y-m-d' }}" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const selectRecorrencia = document.getElementById('id_recorrencia');
+        const blocoData = document.getElementById('bloco_data');
+        const inputData = document.getElementById('id_data'); 
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const dataMinima = `${ano}-${mes}-${dia}`;
+        inputData.min = dataMinima;
+
+        function gerenciarCalendario() {
+            if (selectRecorrencia.value === 'diaria') {
+                blocoData.style.display = 'none';
+            } else {
+                blocoData.style.display = 'block';
+            }
+        }
+        gerenciarCalendario();
+        selectRecorrencia.addEventListener('change', gerenciarCalendario);
+    </script>
+{% endblock %}

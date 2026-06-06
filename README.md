@@ -2,7 +2,7 @@
 Nome: Gabrielly
 
 Formação: Estudante de ADS
-
+    
 Projeto: Por enquanto ainda não pensei em que tipo de projeto fazer
 
 <!-- ----------------------------------------------------------------- -->
@@ -53,13 +53,12 @@ atividade), nível de prioridade (urgente, médio ou flexível) e tipo da tarefa
 ou temporária).  
 
 # 11. O sistema será utilizado em computador, celular ou ambos? 
-Ambos. 
+Ambos.
 
 # 12. Você pretende usar alguma tecnologia específica além do que foi visto em aula? 
 Não. 
 
-# 13. Quais são as principais dificuldades que você imagina encontrar no 
-desenvolvimento? 
+# 13. Quais são as principais dificuldades que você imagina encontrar no desenvolvimento? 
 Organizar corretamente os dados das tarefas (como categorias, prioridades e 
 tipos), implementar o sistema de login de usuários e estruturar as 
 funcionalidades de forma simples e intuitiva. Além disso, pode haver 

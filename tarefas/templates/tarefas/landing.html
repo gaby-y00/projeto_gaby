@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo à Agenda Fluida</title>
+    <link rel="stylesheet" href="{% static 'tarefas/css/auth.css' %}"> 
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card" style="max-width: 500px; margin: 0 auto;">
+            <h1>Agenda Fluida</h1>
+            <p>Organize seus estudos, finanças e compromissos em um só lugar. <br>Tenha o controle da sua rotina na palma da mão.</p>
+            
+            <a href="{% url 'login' %}">
+                <button class="btn-primary">Entrar no Sistema</button>
+            </a>
+            
+            <a href="{% url 'cadastro' %}">
+                <button class="btn-secondary">Criar uma Conta</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
