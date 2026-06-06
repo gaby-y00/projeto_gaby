@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Agenda Fluida{% endblock %}</title>
-
     <link rel="stylesheet" href="{% static 'tarefas/css/style.css' %}">
 </head>
 <body>
@@ -19,14 +18,42 @@
         </form>
         {% endblock %}
 
-        <div class="usuario-info">
-            <span>Olá, <strong>{{ user.username }}</strong></span>
-            <a href="{% url 'logout' %}" style="margin-left: 15px; color: red;">Sair</a>
+        <div class="perfil-container" onclick="toggleMenu()">
+            <div class="perfil-trigger">
+                <span class="avatar">👤</span>
+                <span class="nome-usuario">Olá, <strong>{{ user.username }}</strong> ▾</span>
+            </div>
+            
+            <div class="perfil-dropdown" id="dropdown-menu">
+                <div class="dropdown-header">
+                    <p class="dropdown-nome">{{ user.username }}</p>
+                    
+                    {% if user.perfil.plano == 'premium' %}
+                        <span class="badge-plano premium" style="font-size: 0.7rem;">👑 Premium</span>
+                    {% else %}
+                        <span class="badge-plano free" style="font-size: 0.7rem;">Básico ({{ user.tarefa_set.count }}/10)</span>
+                    {% endif %}
+                </div>
+                
+                <div class="dropdown-body">
+                    <form action="{% url 'mudar_plano' %}" method="POST">
+                        {% csrf_token %}
+                        {% if user.perfil.plano == 'premium' %}
+                            <button type="submit" class="btn-mudar-plano btn-cancelar-assinatura">Rebaixar para Free</button>
+                        {% else %}
+                            <button type="submit" class="btn-mudar-plano btn-upgrade">🚀 Fazer Upgrade (Premium)</button>
+                        {% endif %}
+                    </form>
+                </div>
+                
+                <div class="dropdown-footer">
+                    <a href="{% url 'logout' %}" class="btn-sair">Sair do Sistema</a>
+                </div>
+            </div>
         </div>
     </header>
 
     <div class="layout-app">
-        
         <aside class="sidebar">
             <h3 class="sidebar-titulo">Meus Filtros</h3>
             <nav class="menu-lateral">
@@ -35,6 +62,51 @@
                 <a href="{% url 'categoria' 'Pessoal' %}" class="menu-item">👤 Pessoal</a>
                 <a href="{% url 'categoria' 'Financeiro' %}" class="menu-item">💰 Financeiro</a>
                 <a href="{% url 'categoria' 'Compromisso' %}" class="menu-item">🤝 Compromissos</a>
+                
+                {% if user.perfil.plano == 'premium' %}
+                    
+                    {% for cat in user.categoria_set.all %}
+                        <div class="categoria-premium-row">
+                            <a href="{% url 'categoria' cat.nome %}" class="menu-item link-categoria">
+                                ✨ {{ cat.nome }}
+                            </a>
+                            
+                            <a href="{% url 'excluir_categoria' cat.id %}" class="btn-lixeira-categoria" title="Excluir Categoria" onclick="return confirm('Tem certeza que deseja excluir a categoria {{ cat.nome }}?')">
+                                🗑️
+                            </a>
+                        </div>
+                    {% endfor %}
+
+                    <div class="container-nova-categoria">
+                        
+                        <button type="button" id="btn-mostrar-input" onclick="abrirFormularioCategoria()" class="menu-item btn-nova-categoria">
+                            + Nova Categoria
+                        </button>
+
+                        <form id="form-nova-categoria" action="{% url 'criar_categoria' %}" method="POST" class="form-nova-categoria">
+                            {% csrf_token %}
+                            <input type="text" name="nome_categoria" id="input-nova-categoria" class="input-nova-categoria" placeholder="Nome + Enter ⏎" required onblur="fecharFormularioCategoria()">
+                            <button type="submit" class="btn-escondido"></button>
+                        </form>
+                        
+                    </div>
+
+                    <script>
+                        function abrirFormularioCategoria() {
+                            document.getElementById('btn-mostrar-input').style.display = 'none';
+                            document.getElementById('form-nova-categoria').style.display = 'block';
+                            document.getElementById('input-nova-categoria').focus();
+                        }
+
+                        function fecharFormularioCategoria() {
+                            const input = document.getElementById('input-nova-categoria');
+                            if(input.value.trim() === '') {
+                                document.getElementById('form-nova-categoria').style.display = 'none';
+                                document.getElementById('btn-mostrar-input').style.display = 'flex';
+                            }
+                        }
+                    </script>
+                {% endif %}
             </nav>
         </aside>
 
@@ -42,8 +114,24 @@
             {% block content %}
             {% endblock %}
         </main>
-
     </div>
 
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            if (menu.style.display === 'block') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        // Fecha o menu se clicar fora dele
+        window.onclick = function(event) {
+            if (!event.target.closest('.perfil-container')) {
+                document.getElementById('dropdown-menu').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

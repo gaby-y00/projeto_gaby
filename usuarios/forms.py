@@ -7,9 +7,8 @@ class CadastroForm(forms.ModelForm):
         fields = ['username', 'email', 'password']
 
 class LoginForm(forms.Form):
-    # Em forms.Form, declaramos os campos diretamente, sem "class Meta"
     email = forms.EmailField(label='E-mail')
     password = forms.CharField(
         label='Senha', 
-        widget=forms.PasswordInput() # Continua escondendo a senha com os pontinhos
+        widget=forms.PasswordInput()
     )

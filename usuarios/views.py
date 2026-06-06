@@ -63,5 +63,5 @@ def login_view(request):
 
 
 def logout_view(request):
-    auth_logout(request) # Apaga o cookie de sessão do navegador
-    return redirect('home') # Manda o usuário de volta para a rota inicial (que agora vai mostrar a landing)
+    auth_logout(request)
+    return redirect('home')

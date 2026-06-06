@@ -25,19 +25,20 @@
                     <div class="form-group">
                         <label for="id_categoria">Categoria</label>
                         <select name="categoria" id="id_categoria" class="form-control">
-                            <option value="Estudo" {% if tarefa.categoria == 'Estudo' %}selected{% endif %}>Estudo</option>
-                            <option value="Pessoal" {% if tarefa.categoria == 'Pessoal' %}selected{% endif %}>Pessoal</option>
-                            <option value="Financeiro" {% if tarefa.categoria == 'Financeiro' %}selected{% endif %}>Financeiro</option>
-                            <option value="Compromisso" {% if tarefa.categoria == 'Compromisso' %}selected{% endif %}>Compromisso</option>
+                            {% for cat in categorias %}
+                                <option value="{{ cat }}" {% if cat == tarefa.categoria %}selected{% endif %}>
+                                    {{ cat }}
+                                </option>
+                            {% endfor %}
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="id_prioridade">Prioridade</label>
                         <select name="prioridade" id="id_prioridade" class="form-control">
-                            <option value="Urgente" {% if tarefa.prioridade == 'Urgente' or tarefa.prioridade == 'U' %}selected{% endif %}>Urgente</option>
-                            <option value="Médio" {% if tarefa.prioridade == 'Médio' or tarefa.prioridade == 'M' %}selected{% endif %}>Médio</option>
-                            <option value="Fraco" {% if tarefa.prioridade == 'Fraco' or tarefa.prioridade == 'F' %}selected{% endif %}>Fraco</option>
+                            <option value="U" {% if tarefa.prioridade == 'Urgente' or tarefa.prioridade == 'U' %}selected{% endif %}>Urgente</option>
+                            <option value="M" {% if tarefa.prioridade == 'Médio' or tarefa.prioridade == 'M' %}selected{% endif %}>Médio</option>
+                            <option value="F" {% if tarefa.prioridade == 'Fraco' or tarefa.prioridade == 'F' %}selected{% endif %}>Fraco</option>
                         </select>
                     </div>
                 </div>
@@ -51,12 +52,19 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="id_recorrencia">Repetição / Frequência</label>
-                        <select name="recorrencia" id="id_recorrencia" class="form-control">
-                            <option value="nao_repete" {% if tarefa.recorrencia == 'nao_repete' %}selected{% endif %}>Não se repete (Única)</option>
-                            <option value="diaria" {% if tarefa.recorrencia == 'diaria' %}selected{% endif %}>Todos os dias</option>
-                            <option value="semanal" {% if tarefa.recorrencia == 'semanal' %}selected{% endif %}>Toda semana</option>
-                            <option value="mensal" {% if tarefa.recorrencia == 'mensal' %}selected{% endif %}>Todo mês</option>
+                        <label for="id_recorrencia">
+                            Repetição / Frequência 
+                            {% if plano_usuario == 'free' %}<span style="font-size: 0.8rem; color: #f59e0b; margin-left: 5px;">👑 Premium</span>{% endif %}
+                        </label>
+                        
+                        <select name="recorrencia" id="id_recorrencia" class="form-control" {% if plano_usuario == 'free' %}disabled{% endif %}>
+                            <option value="nao_repete" {% if tarefa.recorrencia == 'nao_repete' or plano_usuario == 'free' %}selected{% endif %}>Não se repete (Única)</option>
+                            
+                            {% if plano_usuario == 'premium' %}
+                                <option value="diaria" {% if tarefa.recorrencia == 'diaria' %}selected{% endif %}>Todos os dias</option>
+                                <option value="semanal" {% if tarefa.recorrencia == 'semanal' %}selected{% endif %}>Toda semana</option>
+                                <option value="mensal" {% if tarefa.recorrencia == 'mensal' %}selected{% endif %}>Todo mês</option>
+                            {% endif %}
                         </select>
                     </div>
 
@@ -77,19 +85,22 @@
     <script>
         const selectRecorrencia = document.getElementById('id_recorrencia');
         const blocoData = document.getElementById('bloco_data');
+        const inputData = document.getElementById('id_data'); 
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const dataMinima = `${ano}-${mes}-${dia}`;
+        inputData.min = dataMinima;
 
         function gerenciarCalendario() {
             if (selectRecorrencia.value === 'diaria') {
                 blocoData.style.display = 'none';
-            </div> else {
+            } else {
                 blocoData.style.display = 'block';
             }
         }
-
-        // Inicializa o estado correto ao carregar a página
         gerenciarCalendario();
-
-        // Escuta as alterações de repetição
         selectRecorrencia.addEventListener('change', gerenciarCalendario);
     </script>
 {% endblock %}

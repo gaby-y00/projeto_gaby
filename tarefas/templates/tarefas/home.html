@@ -31,32 +31,57 @@
                     </div>
                     
                     <div class="calendario-grid" id="calendario-grid"></div>
+                    
                 </div>
             </div>
         {% endif %}
 
         <div class="coluna-tarefas">
-            <ul class="lista-tarefas" style="margin-top: 0;">
+            
+            {% if data_filtrada %}
+                <div class="container-filtro-data">
+                    <span class="texto-filtro-data">
+                        📅 Tarefas do dia: <strong>{{ data_filtrada }}</strong>
+                    </span>
+                    <a href="{% url 'home' %}" class="btn-voltar-filtro">
+                        ← Voltar
+                    </a>
+                </div>
+            {% endif %}
+            
+            <ul class="lista-tarefas">
             {% for tarefa in tarefas %}
-                <li class="item-tarefa">
+                <li class="item-tarefa {% if tarefa.concluida %}tarefa-concluida{% endif %}">
+                    
+                    <a href="{% url 'concluir_tarefa' tarefa.id %}" class="btn-check-concluir">
+                        {% if tarefa.concluida %}
+                            <span class="status-marcado">✅</span>
+                        {% else %}
+                            <span class="status-desmarcado">⬜</span>
+                        {% endif %}
+                    </a>
+
                     <span class="titulo-tarefa">
                         <a href="{% url 'detalhar_tarefa' tarefa.id %}">
                             <strong>{{ tarefa.titulo }}</strong>
                         </a>
+                        
+                        {% if tarefa.data and tarefa.data < hoje and not tarefa.concluida %}
+                            <span class="texto-pendente">(Pendente)</span>
+                        {% endif %}
                     </span>
                     <span class="badge-categoria">{{ tarefa.categoria }}</span>
                 </li>
             {% empty %}
-                <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada neste filtro.</li>
+                <li class="lista-vazia">Você ainda não tem nenhuma tarefa cadastrada nessa categoria</li>
             {% endfor %}
             </ul>
+            
         </div>
-
     </div>
 
     {% if not categoria_atual and not data_filtrada %}
         <script>
-            // TODO O SEU SCRIPT JAVASCRIPT DO CALENDÁRIO CONTINUA AQUI EXATAMENTE IGUAL
             const grid = document.getElementById('calendario-grid');
             const mesAnoDisplay = document.getElementById('mes-ano-display');
             const tarefasDoBanco = JSON.parse('{{ tarefas_json|escapejs }}' || '[]');
@@ -80,6 +105,9 @@
                 }
 
                 const hoje = new Date();
+                // Criamos o formato YYYY-MM-DD de hoje para comparar mais fácil
+                const hojeFormatado = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
+
                 for (let dia = 1; dia <= diasNoMes; dia++) {
                     const divDia = document.createElement('div');
                     divDia.classList.add('calendario-dia');
@@ -96,6 +124,11 @@
                     const stringMes = String(mes + 1).padStart(2, '0');
                     const stringDia = String(dia).padStart(2, '0');
                     const dataFormatada = `${ano}-${stringMes}-${stringDia}`;
+
+                    // NOVO: Se a data do quadradinho for menor que hoje, adiciona a classe 'passado'
+                    if (dataFormatada < hojeFormatado) {
+                        divDia.classList.add('passado');
+                    }
 
                     divDia.addEventListener('click', () => {
                         window.location.href = `?data=${dataFormatada}`;

@@ -48,18 +48,44 @@
                     </div>
                 </div>
                 
-                <div class="form-actions">
-                    <a href="{% url 'home' %}" class="btn-cancelar">Voltar para a Home</a>
+                <div class="form-actions" id="bloco-botoes-padrao">
+                    <a href="{% url 'home' %}" class="btn-cancelar">← Voltar</a>
                     
-                    <a href="{% url 'excluir_tarefa' tarefa.id %}">
-                        <button type="button" class="btn-excluir">Excluir Tarefa</button>
-                    </a>
+                    <button type="button" class="btn-excluir" id="btn-disparar-exclusao">Excluir Tarefa</button>
                     
                     <a href="{% url 'editar_tarefa' tarefa.id %}">
                         <button type="button" class="btn-editar">Editar Tarefa</button>
                     </a>
                 </div>
+
+                <div id="bloco-confirmar-exclusao" class="bloco-confirmacao">
+                    <p class="texto-alerta">
+                        ⚠️ Tem certeza que deseja apagar esta tarefa? Esta ação não pode ser desfeita.
+                    </p>
+                    
+                    <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}" class="form-confirmacao">
+                        {% csrf_token %}
+                        <button type="button" class="btn-cancelar btn-tamanho-fixo" id="btn-cancelar-exclusao">Não, Voltar</button>
+                        <button type="submit" class="btn-excluir btn-tamanho-fixo">Sim, Excluir</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        const blocoBotoes = document.getElementById('bloco-botoes-padrao');
+        const blocoExclusao = document.getElementById('bloco-confirmar-exclusao');
+        
+        const btnDisparar = document.getElementById('btn-disparar-exclusao');
+        const btnCancelar = document.getElementById('btn-cancelar-exclusao');
+        btnDisparar.addEventListener('click', function() {
+            blocoBotoes.style.display = 'none';
+            blocoExclusao.style.display = 'block';
+        });
+        btnCancelar.addEventListener('click', function() {
+            blocoExclusao.style.display = 'none';
+            blocoBotoes.style.display = ''; 
+        });
+    </script>
 {% endblock %}

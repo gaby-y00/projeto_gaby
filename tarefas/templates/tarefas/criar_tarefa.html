@@ -6,35 +6,55 @@
     <div class="bloco-formulario">
         
         <div class="form-header">
-            <h2>Cadastrar Nova Tarefa</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Cadastrar Nova Tarefa</h2>
+                
+                {% if plano_usuario == 'free' %}
+                    <span class="badge-plano free">Plano Básico ({{ total_tarefas }}/10)</span>
+                {% else %}
+                    <span class="badge-plano premium">👑 Plano Premium</span>
+                {% endif %}
+            </div>
             <p class="subtitulo">Preencha as informações abaixo para organizar sua nova tarefa.</p>
         </div>
         
         <div class="form-body">
+            
+            {% if erro_limite %}
+                <div class="alerta-erro">
+                    <strong>Atenção:</strong> {{ erro_limite }}
+                </div>
+            {% endif %}
+
             <form method="POST" class="form-tarefa">
                 {% csrf_token %}
                 
                 <div class="form-row">
                     <div class="form-group" style="flex: 100%;">
                         <label>Título da Tarefa</label>
-                        <input type="text" name="titulo" class="form-control" required placeholder="Ex: Estudar lógica de programação">
+                        <input type="text" name="titulo" class="form-control" required placeholder="Ex: Estudar lógica de programação" {% if erro_limite %}disabled{% endif %}>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Categoria</label>
-                        <select name="categoria" id="categoria" class="form-control">
+                        <select name="categoria" id="categoria" class="form-control" {% if erro_limite %}disabled{% endif %}>
                             <option value="Estudo">Estudo</option>
                             <option value="Pessoal">Pessoal</option>
                             <option value="Financeiro">Financeiro</option>
-                            <option value="Compromisso">Compromisso</option>    
+                            <option value="Compromisso">Compromisso</option> 
+                            
+                            {% for cat in user.categoria_set.all %}
+                                <option value="{{ cat.nome }}">{{ cat.nome }} (Premium)</option>
+                            {% endfor %}
+                            
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Prioridade</label>
-                        <select name="prioridade" id="id_prioridade" class="form-control" required>
+                        <select name="prioridade" id="id_prioridade" class="form-control" required {% if erro_limite %}disabled{% endif %}>
                             <option value="U">Urgente</option>
                             <option value="M" selected>Médio</option>
                             <option value="F">Flexível</option>
@@ -45,30 +65,34 @@
                 <div class="form-row">
                     <div class="form-group" style="flex: 100%;">
                         <label>Descrição Detalhada</label>
-                        <textarea name="descricao" class="form-control" placeholder="Adicione detalhes, links ou observações importantes aqui..."></textarea>
+                        <textarea name="descricao" class="form-control" placeholder="Adicione detalhes, links ou observações importantes aqui..." {% if erro_limite %}disabled{% endif %}></textarea>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Repetição</label>
-                        <select name="recorrencia" id="id_recorrencia" class="form-control">
+                        <label>Repetição {% if plano_usuario == 'free' %}<span class="texto-bloqueado">🔒 Apenas Premium</span>{% endif %}</label>
+                        
+                        <select name="recorrencia" id="id_recorrencia" class="form-control {% if plano_usuario == 'free' %}campo-bloqueado{% endif %}" {% if plano_usuario == 'free' or erro_limite %}disabled{% endif %}>
                             <option value="nao_repete">Não se repete (Única)</option>
-                            <option value="diaria">Todos os dias</option>
-                            <option value="semanal">Toda semana</option>
-                            <option value="mensal">Todo mês</option>
+                            
+                            {% if plano_usuario != 'free' %}
+                                <option value="diaria">Todos os dias</option>
+                                <option value="semanal">Toda semana</option>
+                                <option value="mensal">Todo mês</option>
+                            {% endif %}
                         </select>
                     </div>
 
                     <div class="form-group" id="bloco_data">
                         <label>Data de Execução</label>
-                        <input type="date" name="data" id="id_data" class="form-control" required>
+                        <input type="date" name="data" id="id_data" class="form-control" required {% if erro_limite %}disabled{% endif %}>
                     </div>
                 </div>
                 
                 <div class="form-actions">
                     <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
-                    <button type="submit" class="btn-salvar">Salvar Tarefa</button>
+                    <button type="submit" class="btn-salvar" {% if erro_limite %}disabled style="background-color: #cbd5e1; cursor: not-allowed;"{% endif %}>Salvar Tarefa</button>
                 </div>
             </form>
         </div>
@@ -79,13 +103,21 @@
         const blocoData = document.getElementById('bloco_data');
         const inputData = document.getElementById('id_data');
 
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+        const dataMinima = `${ano}-${mes}-${dia}`; 
+        
+        inputData.min = dataMinima;
+
         selectRecorrencia.addEventListener('change', function() {
             if (this.value === 'diaria') {
                 blocoData.style.display = 'none';  
                 inputData.required = false;        
                 inputData.value = '';              
             } else {
-                blocoData.style.display = 'flex'; // Mantém o alinhamento correto
+                blocoData.style.display = 'flex'; 
                 inputData.required = true;          
             }
         });

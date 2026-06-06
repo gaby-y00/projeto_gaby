@@ -1,0 +1,33 @@
+{% extends 'tarefas/base.html' %} 
+
+{% block title %}Nova Categoria Premium{% endblock %}
+
+{% block content %}
+    <div class="bloco-formulario container-criar-categoria">
+        <div class="form-header header-criar-categoria">
+            <div class="header-titulo-row">
+                <h2>Criar Categoria</h2>
+                <span class="badge-plano premium">👑 Premium</span>
+            </div>
+            <p class="subtitulo">Crie uma nova tag para organizar as suas tarefas.</p>
+        </div>
+        
+        <div class="form-body">
+            <form method="POST" class="form-tarefa">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group campo-full">
+                        <label>Nome da Categoria</label>
+                        <input type="text" name="nome_categoria" class="form-control" required placeholder="Ex: Viagem de Férias, Projetos TI...">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
+                    <button type="submit" class="btn-salvar">Criar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
